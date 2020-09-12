@@ -1,0 +1,7 @@
+1. Add the Tile in the Quick Settings panel.
+2. Tap the Tile to start a timer.
+3. Extend, reduce or cancel the timer with the notification actions.
+
+<u>Note:</u> Don't look for a launcher icon, this app only provides a Quick Settings Tile.
+
+Open Source project hosted on GitHub: https://github.com/SimonMarquis/SleepTimer
