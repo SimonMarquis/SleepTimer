@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="app_name">Sleep Timer</string>
+    <color name="ic_launcher_background">#FFFFFF</color>
+
+    <!--region Tile-->
+    <string name="tile_title">@string/app_name</string>
+    <string name="tile_subtitle">Tap to start</string>
+    <!--endregion-->
+
+    <!--region Notification-->
+    <item name="notification_id" type="id" />
+    <string name="notification_channel_id">sleep_timer</string>
+    <string name="notification_channel_name">@string/app_name</string>
+    <string name="notification_action_cancel">Cancel</string>
+    <string name="notification_action_increment">+%d</string>
+    <string name="notification_action_decrement">-%d</string>
+    <!--endregion-->
+
+</resources>
