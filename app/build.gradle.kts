@@ -12,6 +12,7 @@ val versionBuild = 0
 
 android {
     compileSdkVersion(30)
+    buildToolsVersion("30.0.2")
     defaultConfig {
         applicationId = "fr.smarquis.sleeptimer"
         minSdkVersion(26)
