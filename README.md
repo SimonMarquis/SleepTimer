@@ -1,4 +1,4 @@
-# Sleep Timer 
+# Sleep Timer <img src="https://github.com/SimonMarquis/SleepTimer/workflows/Android CI/badge.svg" alt="Android CI">
 
 | Quick Settings Tile | Notification |
 |---|---|
