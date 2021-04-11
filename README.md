@@ -4,13 +4,14 @@
 |---|---|
 | ![Tile](app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_tile.png) | ![Notification](app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_notification.png) |
 
+Sleep Timer helps you fall asleep while listening to your music or podcasts.  
+When the timer stops, audio playback is gradually lowered then paused.
+
 #### Usage
 
 1. Add the Tile in the Quick Settings panel.
 2. Tap the Tile to start a timer.
 3. Extend, reduce or cancel the timer with the notification actions.
-
-When the timer reaches zero, the music volume slowly fades away and any app playing music is paused.
 
 __Note:__ Don't look for a launcher icon, this app only provides a Quick Settings Tile.
 
