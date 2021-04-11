@@ -4,7 +4,7 @@
 |---|---|
 | ![Tile](app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_tile.png) | ![Notification](app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_notification.png) |
 
-Sleep Timer helps you fall asleep while listening to your music or podcasts.  
+Sleep Timer helps you fall asleep while listening to music or podcasts.  
 When the timer stops, audio playback is gradually lowered then paused.
 
 #### Usage
