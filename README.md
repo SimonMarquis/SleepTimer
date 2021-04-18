@@ -1,4 +1,8 @@
-# Sleep Timer <img src="https://github.com/SimonMarquis/SleepTimer/workflows/Android CI/badge.svg" alt="Android CI">
+# Sleep Timer
+
+[![Android CI](https://github.com/SimonMarquis/SleepTimer/workflows/Android%20CI/badge.svg)](https://github.com/SimonMarquis/SleepTimer/actions/workflows/android.yml)
+[![Google Play](https://img.shields.io/badge/Google_Play-black?style=flat&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=fr.smarquis.sleeptimer)
+[![F-Droid](https://img.shields.io/badge/F--Droid-black?style=flat&logo=f-droid&logoColor=white)](https://f-droid.org/en/packages/fr.smarquis.sleeptimer/)
 
 | Quick Settings Tile | Notification |
 |---|---|
