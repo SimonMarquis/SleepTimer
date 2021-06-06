@@ -7,15 +7,17 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
-import android.os.Build
-import fr.smarquis.sleeptimer.SleepNotification.Action.*
+import fr.smarquis.sleeptimer.SleepNotification.Action.CANCEL
+import fr.smarquis.sleeptimer.SleepNotification.Action.DECREMENT
+import fr.smarquis.sleeptimer.SleepNotification.Action.INCREMENT
 import java.lang.System.currentTimeMillis
 import java.text.DateFormat
 import java.text.DateFormat.SHORT
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.MINUTES
 
@@ -42,8 +44,13 @@ object SleepNotification {
         }
 
         fun intent(context: Context): Intent = Intent(context, SleepTileService::class.java).setAction(value)
-        fun pendingIntent(context: Context, cancel: Boolean = false): PendingIntent? = PendingIntent.getService(context, 0, intent(context), 0).apply { if (cancel) cancel() }
-        fun action(context: Context, cancel: Boolean = false): Notification.Action.Builder = Notification.Action.Builder(Icon.createWithResource(context, 0), title(context), pendingIntent(context, cancel))
+
+        fun pendingIntent(context: Context, cancel: Boolean = false): PendingIntent? =
+            PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE).apply { if (cancel) cancel() }
+
+        fun action(context: Context, cancel: Boolean = false): Notification.Action.Builder =
+            Notification.Action.Builder(Icon.createWithResource(context, 0), title(context), pendingIntent(context, cancel))
+
         abstract fun title(context: Context): CharSequence?
     }
 
@@ -82,7 +89,7 @@ object SleepNotification {
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
             .addAction(CANCEL.action(this).build())
             .build()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createNotificationChannel()
+        createNotificationChannel()
         notificationManager()?.notify(R.id.notification_id, notification)
     }
 

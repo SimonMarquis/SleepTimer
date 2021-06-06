@@ -1,8 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 package fr.smarquis.sleeptimer
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
@@ -10,7 +9,9 @@ import android.media.AudioAttributes.CONTENT_TYPE_MUSIC
 import android.media.AudioAttributes.USAGE_MEDIA
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.media.AudioManager.*
+import android.media.AudioManager.ADJUST_LOWER
+import android.media.AudioManager.AUDIOFOCUS_GAIN
+import android.media.AudioManager.STREAM_MUSIC
 import fr.smarquis.sleeptimer.SleepTileService.Companion.requestTileUpdate
 import java.util.concurrent.TimeUnit.SECONDS
 
@@ -21,7 +22,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         private val FADE_STEP_MILLIS = SECONDS.toMillis(1)
 
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
-        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), 0)
+        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
     }
 
     override fun onHandleIntent(intent: Intent?) = getSystemService(AudioManager::class.java)?.run {
@@ -44,6 +45,6 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
 
         // update tile
         requestTileUpdate()
-    }.let { Unit }
+    } ?: Unit
 
 }

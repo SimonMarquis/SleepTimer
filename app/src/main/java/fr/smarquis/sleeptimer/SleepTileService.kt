@@ -13,7 +13,7 @@ import fr.smarquis.sleeptimer.SleepNotification.handle
 import fr.smarquis.sleeptimer.SleepNotification.toggle
 import java.text.DateFormat.SHORT
 import java.text.DateFormat.getTimeInstance
-import java.util.*
+import java.util.Date
 
 class SleepTileService : TileService() {
 

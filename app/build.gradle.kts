@@ -2,7 +2,7 @@ import org.gradle.api.JavaVersion.VERSION_1_8
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    kotlin("android")
 }
 
 val versionMajor = 1
@@ -11,12 +11,11 @@ val versionPatch = 0
 val versionBuild = 1
 
 android {
-    compileSdkVersion(30)
-    buildToolsVersion("30.0.2")
+    compileSdk = 30
     defaultConfig {
         applicationId = "fr.smarquis.sleeptimer"
-        minSdkVersion(26)
-        targetSdkVersion(30)
+        minSdk = 26
+        targetSdk = 30
         versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
     }
@@ -29,13 +28,15 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFile(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
-        getByName("debug") {
-            initWith(getByName("release"))
+        debug {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFile(getDefaultProguardFile("proguard-android-optimize.txt"))
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
         }
@@ -47,8 +48,4 @@ android {
     kotlinOptions {
         jvmTarget = VERSION_1_8.toString()
     }
-}
-
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.10")
 }
