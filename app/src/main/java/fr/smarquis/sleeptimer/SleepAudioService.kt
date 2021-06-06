@@ -40,6 +40,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         requestAudioFocus(focusRequest)
 
         // restore volume
+        Thread.sleep(FADE_STEP_MILLIS)
         setStreamVolume(STREAM_MUSIC, volumeIndex, 0)
         abandonAudioFocusRequest(focusRequest)
 
