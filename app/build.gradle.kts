@@ -1,5 +1,3 @@
-import org.gradle.api.JavaVersion.VERSION_1_8
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -11,11 +9,11 @@ val versionPatch = 0
 val versionBuild = 0
 
 android {
-    compileSdk = 30
+    compileSdk = 31
     defaultConfig {
         applicationId = "fr.smarquis.sleeptimer"
         minSdk = 26
-        targetSdk = 30
+        targetSdk = 31
         versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
     }
@@ -40,12 +38,5 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
         }
-    }
-    compileOptions {
-        sourceCompatibility = VERSION_1_8
-        targetCompatibility = VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = VERSION_1_8.toString()
     }
 }
