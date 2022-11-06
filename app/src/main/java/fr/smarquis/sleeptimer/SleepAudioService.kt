@@ -20,6 +20,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
 
     companion object {
         private val FADE_STEP_MILLIS = SECONDS.toMillis(1)
+        private val RESTORE_VOLUME_MILLIS = SECONDS.toMillis(2)
 
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
         fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
@@ -40,7 +41,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         requestAudioFocus(focusRequest)
 
         // restore volume
-        Thread.sleep(FADE_STEP_MILLIS)
+        Thread.sleep(RESTORE_VOLUME_MILLIS)
         setStreamVolume(STREAM_MUSIC, volumeIndex, 0)
         abandonAudioFocusRequest(focusRequest)
 
