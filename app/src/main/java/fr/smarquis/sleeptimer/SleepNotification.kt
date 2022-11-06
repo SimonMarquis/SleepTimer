@@ -54,7 +54,7 @@ object SleepNotification {
         abstract fun title(context: Context): CharSequence?
     }
 
-    private fun Context.notificationManager() = getSystemService(NotificationManager::class.java)
+    fun Context.notificationManager(): NotificationManager? = getSystemService(NotificationManager::class.java)
 
     fun Context.find() = notificationManager()?.activeNotifications?.firstOrNull { it.id == R.id.notification_id }?.notification
 
