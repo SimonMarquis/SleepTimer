@@ -1,6 +1,8 @@
+import org.gradle.api.JavaVersion.VERSION_11
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.kotlin)
 }
 
 val versionMajor = 1
@@ -39,5 +41,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
         }
+    }
+    compileOptions {
+        sourceCompatibility = VERSION_11
+        targetCompatibility = VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = VERSION_11.toString()
     }
 }
