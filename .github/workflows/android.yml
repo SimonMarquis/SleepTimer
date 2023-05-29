@@ -13,29 +13,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup JDK 11
-      uses: actions/setup-java@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
       with:
-        java-version: 11
-    - name: Fix gradlew permission
-      run: chmod +x gradlew
-    - name: Assemble → Test → Lint
-      run: ./gradlew assembleDebug test lint --stacktrace
+        java-version: '17'
+        distribution: 'temurin'
+    - uses: gradle/wrapper-validation-action@8d49e559aae34d3e0eb16cde532684bc9702762b # v1.0.6
+    - uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629 # v2.4.2
+      with:
+        arguments: assembleDebug test lint --stacktrace
+        gradle-home-cache-cleanup: true
     - name: Upload APK
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: app-debug.apk
         path: app/build/outputs/apk/debug/app-debug.apk
     - name: Upload UnitTest reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: unit-tests-reports
         path: |
           **/reports/tests/test*UnitTest/
           **/build/test-results/Test-*.xml
     - name: Upload Lint reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: lint-reports
         path: |
