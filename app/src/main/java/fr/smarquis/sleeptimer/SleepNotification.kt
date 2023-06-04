@@ -79,7 +79,7 @@ object SleepNotification {
             .setVisibility(VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
             .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.ic_tile)
             .setSubText(DateFormat.getTimeInstance(SHORT).format(Date(eta)))
             .setShowWhen(true).setWhen(eta)
             .setUsesChronometer(true).setChronometerCountDown(true)
