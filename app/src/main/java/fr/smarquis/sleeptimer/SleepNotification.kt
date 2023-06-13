@@ -32,10 +32,10 @@ object SleepNotification {
             override fun title(context: Context) = context.getText(android.R.string.cancel)
         },
         INCREMENT("fr.smarquis.sleeptimer.action.INCREMENT") {
-            override fun title(context: Context) = context.getString(R.string.notification_action_increment, MILLISECONDS.toMinutes(TIMEOUT_INCREMENT_MILLIS))
+            override fun title(context: Context) = "+" + MILLISECONDS.toMinutes(TIMEOUT_INCREMENT_MILLIS)
         },
         DECREMENT("fr.smarquis.sleeptimer.action.DECREMENT") {
-            override fun title(context: Context) = context.getString(R.string.notification_action_decrement, MILLISECONDS.toMinutes(TIMEOUT_DECREMENT_MILLIS))
+            override fun title(context: Context) = "-" + MILLISECONDS.toMinutes(TIMEOUT_DECREMENT_MILLIS)
         },
         ;
 
