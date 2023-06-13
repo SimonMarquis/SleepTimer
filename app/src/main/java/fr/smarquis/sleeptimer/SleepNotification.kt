@@ -95,7 +95,7 @@ object SleepNotification {
 
     private fun Context.createNotificationChannel() {
         val id = getString(R.string.notification_channel_id)
-        val name: CharSequence = getString(R.string.notification_channel_name)
+        val name: CharSequence = getString(R.string.app_name)
         val channel = NotificationChannel(id, name, IMPORTANCE_LOW).apply {
             setBypassDnd(true)
             lockscreenVisibility = VISIBILITY_PUBLIC

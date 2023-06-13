@@ -3,14 +3,12 @@
     <string name="app_name">Sleep Timer</string>
 
     <!--region Tile-->
-    <string name="tile_title">@string/app_name</string>
     <string name="tile_subtitle">Tap to start</string>
     <!--endregion-->
 
     <!--region Notification-->
     <item name="notification_id" type="id" />
     <string name="notification_channel_id">sleep_timer</string>
-    <string name="notification_channel_name">@string/app_name</string>
     <!--endregion-->
 
 </resources>
