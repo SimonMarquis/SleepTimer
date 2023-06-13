@@ -42,6 +42,10 @@ android {
             isDebuggable = true
         }
     }
+    packaging {
+        resources.excludes.add("kotlin-tooling-metadata.json")
+        resources.excludes.add("**/*.kotlin_builtins")
+    }
     compileOptions {
         sourceCompatibility = VERSION_11
         targetCompatibility = VERSION_11
