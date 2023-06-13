@@ -29,7 +29,7 @@ object SleepNotification {
 
     private enum class Action(private val value: String) {
         CANCEL("fr.smarquis.sleeptimer.action.CANCEL") {
-            override fun title(context: Context) = context.getText(R.string.notification_action_cancel)
+            override fun title(context: Context) = context.getText(android.R.string.cancel)
         },
         INCREMENT("fr.smarquis.sleeptimer.action.INCREMENT") {
             override fun title(context: Context) = context.getString(R.string.notification_action_increment, MILLISECONDS.toMinutes(TIMEOUT_INCREMENT_MILLIS))

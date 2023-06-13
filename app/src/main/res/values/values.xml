@@ -11,7 +11,6 @@
     <item name="notification_id" type="id" />
     <string name="notification_channel_id">sleep_timer</string>
     <string name="notification_channel_name">@string/app_name</string>
-    <string name="notification_action_cancel">Cancel</string>
     <string name="notification_action_increment">+%d</string>
     <string name="notification_action_decrement">-%d</string>
     <!--endregion-->
