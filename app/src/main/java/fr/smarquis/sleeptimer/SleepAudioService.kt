@@ -26,6 +26,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) = getSystemService(AudioManager::class.java)?.run {
         val volumeIndex = getStreamVolume(STREAM_MUSIC)
 
