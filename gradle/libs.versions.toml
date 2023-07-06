@@ -1,6 +1,6 @@
 [versions]
 android-gradlePlugin = "8.0.2"
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
