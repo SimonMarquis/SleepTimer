@@ -1,5 +1,6 @@
 package fr.smarquis.sleeptimer
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.getActivity
 import android.content.ComponentName
@@ -58,6 +59,7 @@ class SleepTileService : TileService() {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
     }.let {
+        @SuppressLint("StartActivityAndCollapseDeprecated")
         if (SDK_INT <= TIRAMISU) @Suppress("DEPRECATION") startActivityAndCollapse(it)
         else startActivityAndCollapse(getActivity(this, 0, it, FLAG_IMMUTABLE))
     }
