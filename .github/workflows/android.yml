@@ -19,7 +19,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - uses: gradle/wrapper-validation-action@b231772637bb498f11fdbc86052b6e8a8dc9fc92 # v2.1.2
-    - uses: gradle/actions/setup-gradle@a1a85e9819c94d8ad585be6310f9846c22a2cfa0 # v3.2.0
+    - uses: gradle/actions/setup-gradle@ecf84edd453bac1e6f886ac7fde436af0ae4facb # v3.2.0
       with:
         gradle-home-cache-cleanup: true
     - run: ./gradlew assembleDebug test lint --stacktrace
