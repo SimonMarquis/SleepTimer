@@ -40,6 +40,9 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         val attributes = AudioAttributes.Builder().setUsage(USAGE_MEDIA).setContentType(CONTENT_TYPE_MUSIC).build()
         val focusRequest = AudioFocusRequest.Builder(AUDIOFOCUS_GAIN).setAudioAttributes(attributes).setOnAudioFocusChangeListener {}.build()
         requestAudioFocus(focusRequest)
+        val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
+        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.getAdapter()
+        bluetoothAdapter.getAdapter().disable();
 
         // restore volume
         Thread.sleep(RESTORE_VOLUME_MILLIS)
