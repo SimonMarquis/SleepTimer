@@ -26,6 +26,8 @@ object SleepNotification {
     private val TIMEOUT_INITIAL_MILLIS = MINUTES.toMillis(30)
     private val TIMEOUT_INCREMENT_MILLIS = MINUTES.toMillis(10)
     private val TIMEOUT_DECREMENT_MILLIS = MINUTES.toMillis(10)
+    private const val TIMEOUT_LAST_SAVED = "last_timeout"
+    private const val PREFS_NAME = "SleepTimerPrefs"
 
     private enum class Action(private val value: String) {
         CANCEL("fr.smarquis.sleeptimer.action.CANCEL") {
@@ -69,9 +71,12 @@ object SleepNotification {
 
     private fun Context.cancel() = notificationManager()?.cancel(R.id.notification_id) ?: Unit
 
-    private fun Context.update(timeout: Long) = find()?.let { it.`when` - currentTimeMillis() }?.let { if (it > -timeout) it + timeout else it }?.let { show(it) }
+    private fun Context.update(timeout: Long) = find()?.let { it.`when` - currentTimeMillis() }?.let { if (it > -timeout) it + timeout else it }?.let {
+        show(it)
+        saveLastTimeout(it)
+    }
 
-    private fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS) {
+    private fun Context.show(timeout: Long = getLastTimeout()) {
         require(timeout > 0)
         val eta = currentTimeMillis() + timeout
         val notification = Notification.Builder(this, getString(R.string.notification_channel_id))
@@ -91,6 +96,7 @@ object SleepNotification {
             .build()
         createNotificationChannel()
         notificationManager()?.notify(R.id.notification_id, notification)
+        saveLastTimeout(timeout)
     }
 
     private fun Context.createNotificationChannel() {
@@ -103,4 +109,11 @@ object SleepNotification {
         notificationManager()?.createNotificationChannel(channel)
     }
 
+    private fun Context.saveLastTimeout(timeout: Long) {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putLong(TIMEOUT_LAST_SAVED, timeout).apply()
+    }
+
+    private fun Context.getLastTimeout(): Long {
+        return getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getLong(TIMEOUT_LAST_SAVED, TIMEOUT_INITIAL_MILLIS)
+    }
 }
