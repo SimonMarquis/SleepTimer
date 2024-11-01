@@ -11,12 +11,12 @@ val versionPatch = 0
 val versionBuild = 0
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "fr.smarquis.sleeptimer"
         namespace = "fr.smarquis.sleeptimer"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
     }
