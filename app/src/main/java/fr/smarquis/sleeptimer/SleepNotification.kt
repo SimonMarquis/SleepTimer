@@ -40,7 +40,7 @@ object SleepNotification {
         ;
 
         companion object {
-            fun parse(value: String?): Action? = values().firstOrNull { it.value == value }
+            fun parse(value: String?): Action? = entries.firstOrNull { it.value == value }
         }
 
         fun intent(context: Context): Intent = Intent(context, SleepTileService::class.java).setAction(value)
