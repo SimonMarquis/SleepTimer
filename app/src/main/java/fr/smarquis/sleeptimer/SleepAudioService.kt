@@ -4,14 +4,13 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioAttributes.CONTENT_TYPE_MUSIC
-import android.media.AudioAttributes.USAGE_MEDIA
-import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.AudioManager.ADJUST_LOWER
-import android.media.AudioManager.AUDIOFOCUS_GAIN
 import android.media.AudioManager.STREAM_MUSIC
+import android.view.KeyEvent
+import android.view.KeyEvent.ACTION_DOWN
+import android.view.KeyEvent.ACTION_UP
+import android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
 import fr.smarquis.sleeptimer.SleepTileService.Companion.requestTileUpdate
 import java.util.concurrent.TimeUnit.SECONDS
 
@@ -36,15 +35,13 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
             Thread.sleep(FADE_STEP_MILLIS)
         } while (getStreamVolume(STREAM_MUSIC) > 0)
 
-        // request focus
-        val attributes = AudioAttributes.Builder().setUsage(USAGE_MEDIA).setContentType(CONTENT_TYPE_MUSIC).build()
-        val focusRequest = AudioFocusRequest.Builder(AUDIOFOCUS_GAIN).setAudioAttributes(attributes).setOnAudioFocusChangeListener {}.build()
-        requestAudioFocus(focusRequest)
+        // pause media
+        dispatchMediaKeyEvent(KeyEvent(ACTION_DOWN, KEYCODE_MEDIA_PAUSE))
+        dispatchMediaKeyEvent(KeyEvent(ACTION_UP, KEYCODE_MEDIA_PAUSE))
 
         // restore volume
         Thread.sleep(RESTORE_VOLUME_MILLIS)
         setStreamVolume(STREAM_MUSIC, volumeIndex, 0)
-        abandonAudioFocusRequest(focusRequest)
 
         // update tile
         requestTileUpdate()
