@@ -2,6 +2,7 @@ package fr.smarquis.sleeptimer
 
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
@@ -23,12 +24,24 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         private val RESTORE_VOLUME_MILLIS = SECONDS.toMillis(2)
 
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
-        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
+        fun pendingIntent(context: Context, eta: Long): PendingIntent? = PendingIntent.getService(
+            context,
+            0,
+            intent(context).apply { putExtra("eta", eta) },
+            FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
+        )
     }
 
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) = getSystemService(AudioManager::class.java)?.run {
         val volumeIndex = getStreamVolume(STREAM_MUSIC)
+
+        // stop if intent is handled before eta
+        val eta = intent?.getLongExtra("eta", 0)?.takeIf { it > 0 }
+        if (eta == null || System.currentTimeMillis() < eta) {
+            stopSelf()
+            return
+        }
 
         // fade out volume
         do {
