@@ -84,7 +84,7 @@ object SleepNotification {
             .setShowWhen(true).setWhen(eta)
             .setUsesChronometer(true).setChronometerCountDown(true)
             .setTimeoutAfter(timeout)
-            .setDeleteIntent(SleepAudioService.pendingIntent(this))
+            .setDeleteIntent(SleepAudioService.pendingIntent(this, eta))
             .addAction(INCREMENT.action(this).build())
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
             .addAction(CANCEL.action(this).build())
