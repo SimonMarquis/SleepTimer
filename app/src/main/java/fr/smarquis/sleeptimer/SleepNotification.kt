@@ -11,9 +11,9 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
-import fr.smarquis.sleeptimer.SleepNotification.Action.CANCEL
 import fr.smarquis.sleeptimer.SleepNotification.Action.DECREMENT
 import fr.smarquis.sleeptimer.SleepNotification.Action.INCREMENT
+import fr.smarquis.sleeptimer.SleepNotification.Action.RESET
 import java.lang.System.currentTimeMillis
 import java.text.DateFormat
 import java.text.DateFormat.SHORT
@@ -28,14 +28,14 @@ object SleepNotification {
     private val TIMEOUT_DECREMENT_MILLIS = MINUTES.toMillis(10)
 
     private enum class Action(private val value: String) {
-        CANCEL("fr.smarquis.sleeptimer.action.CANCEL") {
-            override fun title(context: Context) = context.getText(android.R.string.cancel)
+        DECREMENT("fr.smarquis.sleeptimer.action.DECREMENT") {
+            override fun title(context: Context) = "-" + MILLISECONDS.toMinutes(TIMEOUT_DECREMENT_MILLIS)
         },
         INCREMENT("fr.smarquis.sleeptimer.action.INCREMENT") {
             override fun title(context: Context) = "+" + MILLISECONDS.toMinutes(TIMEOUT_INCREMENT_MILLIS)
         },
-        DECREMENT("fr.smarquis.sleeptimer.action.DECREMENT") {
-            override fun title(context: Context) = "-" + MILLISECONDS.toMinutes(TIMEOUT_DECREMENT_MILLIS)
+        RESET("fr.smarquis.sleeptimer.action.RESET") {
+            override fun title(context: Context) = "↺"
         },
         ;
 
@@ -61,7 +61,7 @@ object SleepNotification {
     fun Context.handle(intent: Intent?) = when (Action.parse(intent?.action)) {
         INCREMENT -> update(TIMEOUT_INCREMENT_MILLIS)
         DECREMENT -> update(-TIMEOUT_DECREMENT_MILLIS)
-        CANCEL -> cancel()
+        RESET -> show()
         null -> Unit
     }
 
@@ -85,9 +85,9 @@ object SleepNotification {
             .setUsesChronometer(true).setChronometerCountDown(true)
             .setTimeoutAfter(timeout)
             .setDeleteIntent(SleepAudioService.pendingIntent(this, eta))
+            .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_INCREMENT_MILLIS).build())
             .addAction(INCREMENT.action(this).build())
-            .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
-            .addAction(CANCEL.action(this).build())
+            .addAction(RESET.action(this).build())
             .build()
         createNotificationChannel()
         notificationManager()?.notify(R.id.notification_id, notification)
