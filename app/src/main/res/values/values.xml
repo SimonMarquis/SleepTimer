@@ -11,4 +11,8 @@
     <string name="notification_channel_id">sleep_timer</string>
     <!--endregion-->
 
+    <!--region Service-->
+    <item name="service_id" type="id" />
+    <!--endregion-->
+
 </resources>
