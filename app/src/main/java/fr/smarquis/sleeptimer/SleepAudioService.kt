@@ -20,14 +20,23 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
     companion object {
         private val FADE_STEP_MILLIS = SECONDS.toMillis(1)
         private val RESTORE_VOLUME_MILLIS = SECONDS.toMillis(2)
+        private const val VOLUME_EXTRA_KEY = "extras:volume"
+
+        private fun Context.audioManager() = getSystemService(AudioManager::class.java)
 
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
+            .putExtra(VOLUME_EXTRA_KEY, context.audioManager()?.getStreamVolume(STREAM_MUSIC))
+
         fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onHandleIntent(intent: Intent?) = getSystemService(AudioManager::class.java)?.run {
-        val volumeIndex = getStreamVolume(STREAM_MUSIC)
+    override fun onHandleIntent(intent: Intent?) = audioManager()?.run {
+        // compute volume to restore
+        val currentVolume = getStreamVolume(STREAM_MUSIC)
+        val volumeToRestore = intent
+            ?.getIntExtra(VOLUME_EXTRA_KEY, currentVolume)
+            ?: currentVolume
 
         // fade out volume
         do {
@@ -41,7 +50,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
 
         // restore volume
         Thread.sleep(RESTORE_VOLUME_MILLIS)
-        setStreamVolume(STREAM_MUSIC, volumeIndex, 0)
+        setStreamVolume(STREAM_MUSIC, volumeToRestore, 0)
 
         // update tile
         requestTileUpdate()
