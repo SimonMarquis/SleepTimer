@@ -1,4 +1,4 @@
-import org.gradle.api.JavaVersion.VERSION_11
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -48,7 +48,9 @@ android {
         sourceCompatibility = VERSION_11
         targetCompatibility = VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = VERSION_11.toString()
+}
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
     }
 }
