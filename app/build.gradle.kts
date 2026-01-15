@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.android.kotlin)
 }
 
 val versionMajor = 1
@@ -30,13 +29,12 @@ android {
         }
     }
     buildTypes {
-        val release by getting {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFile(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
         debug {
-            initWith(release)
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
         }
