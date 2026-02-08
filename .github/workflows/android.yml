@@ -33,7 +33,7 @@ jobs:
         name: unit-tests-reports
         path: |
           **/reports/tests/
-          **/build/test-results/TEST-*.xml
+          **/build/test-results/**/TEST-*.xml
         if-no-files-found: ignore
     - name: Upload Lint reports
       uses: actions/upload-artifact@v6
