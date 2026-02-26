@@ -23,12 +23,12 @@ jobs:
         validate-wrappers: true
     - run: ./gradlew assembleDebug test lint --stacktrace
     - name: Upload APK
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: app-debug.apk
         path: app/build/outputs/apk/debug/app-debug.apk
     - name: Upload UnitTest reports
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: unit-tests-reports
         path: |
@@ -36,7 +36,7 @@ jobs:
           **/build/test-results/**/TEST-*.xml
         if-no-files-found: ignore
     - name: Upload Lint reports
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: lint-reports
         path: |
