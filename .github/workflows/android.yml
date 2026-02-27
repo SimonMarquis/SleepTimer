@@ -27,6 +27,7 @@ jobs:
       with:
         name: app-debug.apk
         path: app/build/outputs/apk/debug/app-debug.apk
+        archive: false
     - name: Upload UnitTest reports
       uses: actions/upload-artifact@v7
       with:
