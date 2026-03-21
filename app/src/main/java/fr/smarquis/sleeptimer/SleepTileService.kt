@@ -21,47 +21,29 @@ import java.text.DateFormat.SHORT
 import java.text.DateFormat.getTimeInstance
 import java.util.Date
 
-class SleepTileService : TileService() {
+class SleepTimerTileService : TileService() {
 
-    companion object {
-        fun Context.requestTileUpdate() = requestListeningState(this, ComponentName(this, SleepTileService::class.java))
+    override fun onStartListening() {
+        val tile = qsTile ?: return
+        val isTimerRunning = SleepTimerManager.isTimerActive(applicationContext)
+        
+        tile.state = if (isTimerRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+        tile.updateTile()
     }
 
-    override fun onStartListening() = refreshTile()
-
-    override fun onClick() = when (notificationManager()?.areNotificationsEnabled()) {
-        true -> toggle().also { refreshTile() }
-        else -> requestNotificationsPermission()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        handle(intent)
-        requestTileUpdate()
-        stopSelfResult(startId)
-        return START_NOT_STICKY
-    }
-
-    private fun refreshTile() = qsTile?.run {
-        when (val notification = find()) {
-            null -> {
-                state = STATE_INACTIVE
-                if (SDK_INT >= Q) subtitle = resources.getText(R.string.tile_subtitle)
-            }
-            else -> {
-                state = STATE_ACTIVE
-                if (SDK_INT >= Q) subtitle = getTimeInstance(SHORT).format(Date(notification.`when`))
-            }
+    override fun onClick() {
+        val tile = qsTile ?: return
+        val isTimerRunning = SleepTimerManager.isTimerActive(applicationContext)
+        
+        if (isTimerRunning) {
+            SleepTimerManager.stopTimer(applicationContext)
+            tile.state = Tile.STATE_INACTIVE
+            tile.updateTile()
+            return
         }
-        updateTile()
-    } ?: Unit
-
-    private fun requestNotificationsPermission() = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-    }.let {
-        @SuppressLint("StartActivityAndCollapseDeprecated")
-        if (SDK_INT <= TIRAMISU) @Suppress("DEPRECATION") startActivityAndCollapse(it)
-        else startActivityAndCollapse(getActivity(this, 0, it, FLAG_IMMUTABLE))
+        
+        SleepTimerManager.startTimer(applicationContext)
+        tile.state = Tile.STATE_ACTIVE
+        tile.updateTile()
     }
-
 }
