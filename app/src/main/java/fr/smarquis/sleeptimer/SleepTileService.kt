@@ -21,29 +21,66 @@ import java.text.DateFormat.SHORT
 import java.text.DateFormat.getTimeInstance
 import java.util.Date
 
-class SleepTimerTileService : TileService() {
+class SleepTileService : TileService() {
+
+    companion object {
+        fun Context.requestTileUpdate() {
+            requestListeningState(this, ComponentName(this, SleepTileService::class.java))
+        }
+    }
 
     override fun onStartListening() {
-        val tile = qsTile ?: return
-        val isTimerRunning = SleepTimerManager.isTimerActive(applicationContext)
-        
-        tile.state = if (isTimerRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        tile.updateTile()
+        refreshTile()
     }
 
     override fun onClick() {
+        val notificationsEnabled = notificationManager()?.areNotificationsEnabled() == true
+
+        if (!notificationsEnabled) {
+            requestNotificationsPermission()
+            return
+        }
+
+        toggle()
+        refreshTile()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        handle(intent)
+        requestTileUpdate()
+        stopSelfResult(startId)
+        return START_NOT_STICKY
+    }
+
+    private fun refreshTile() {
         val tile = qsTile ?: return
-        val isTimerRunning = SleepTimerManager.isTimerActive(applicationContext)
-        
-        if (isTimerRunning) {
-            SleepTimerManager.stopTimer(applicationContext)
-            tile.state = Tile.STATE_INACTIVE
+        val notification = find()
+
+        if (notification == null) {
+            tile.state = STATE_INACTIVE
+            if (SDK_INT >= Q) tile.subtitle = resources.getText(R.string.tile_subtitle)
             tile.updateTile()
             return
         }
-        
-        SleepTimerManager.startTimer(applicationContext)
-        tile.state = Tile.STATE_ACTIVE
+
+        tile.state = STATE_ACTIVE
+        if (SDK_INT >= Q) tile.subtitle = getTimeInstance(SHORT).format(Date(notification.`when`))
         tile.updateTile()
+    }
+
+    private fun requestNotificationsPermission() {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        }
+
+        @SuppressLint("StartActivityAndCollapseDeprecated")
+        if (SDK_INT <= TIRAMISU) {
+            @Suppress("DEPRECATION")
+            startActivityAndCollapse(intent)
+            return
+        }
+
+        startActivityAndCollapse(getActivity(this, 0, intent, FLAG_IMMUTABLE))
     }
 }
