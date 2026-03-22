@@ -14,7 +14,6 @@ import android.service.quicksettings.Tile.STATE_ACTIVE
 import android.service.quicksettings.Tile.STATE_INACTIVE
 import android.service.quicksettings.TileService
 import fr.smarquis.sleeptimer.SleepNotification.find
-import fr.smarquis.sleeptimer.SleepNotification.handle
 import fr.smarquis.sleeptimer.SleepNotification.notificationManager
 import fr.smarquis.sleeptimer.SleepNotification.toggle
 import java.text.DateFormat.SHORT
@@ -32,13 +31,6 @@ class SleepTileService : TileService() {
     override fun onClick() = when (notificationManager()?.areNotificationsEnabled()) {
         true -> toggle().also { refreshTile() }
         else -> requestNotificationsPermission()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        handle(intent)
-        requestTileUpdate()
-        stopSelfResult(startId)
-        return START_NOT_STICKY
     }
 
     private fun refreshTile() = qsTile?.run {

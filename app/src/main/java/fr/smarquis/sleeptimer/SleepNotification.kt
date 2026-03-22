@@ -43,10 +43,10 @@ object SleepNotification {
             fun parse(value: String?): Action? = entries.firstOrNull { it.value == value }
         }
 
-        fun intent(context: Context): Intent = Intent(context, SleepTileService::class.java).setAction(value)
+        private fun intent(context: Context): Intent = Intent(context, SleepActionReceiver::class.java).setAction(value)
 
-        fun pendingIntent(context: Context, cancel: Boolean = false): PendingIntent? =
-            PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE).apply { if (cancel) cancel() }
+        private fun pendingIntent(context: Context, cancel: Boolean = false): PendingIntent? =
+            PendingIntent.getBroadcast(context, 0, intent(context), FLAG_IMMUTABLE).apply { if (cancel) cancel() }
 
         fun action(context: Context, cancel: Boolean = false): Notification.Action.Builder =
             Notification.Action.Builder(Icon.createWithResource(context, 0), title(context), pendingIntent(context, cancel))
