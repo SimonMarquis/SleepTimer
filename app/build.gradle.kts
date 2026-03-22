@@ -6,8 +6,8 @@ plugins {
 }
 
 val versionMajor = 1
-val versionMinor = 3
-val versionPatch = 3
+val versionMinor = 4
+val versionPatch = 0
 val versionBuild = 0
 
 android {
