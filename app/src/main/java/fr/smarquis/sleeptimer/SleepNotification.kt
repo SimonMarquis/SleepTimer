@@ -14,6 +14,7 @@ import android.graphics.drawable.Icon
 import fr.smarquis.sleeptimer.SleepNotification.Action.CANCEL
 import fr.smarquis.sleeptimer.SleepNotification.Action.DECREMENT
 import fr.smarquis.sleeptimer.SleepNotification.Action.INCREMENT
+import fr.smarquis.sleeptimer.SleepNotification.Action.TOGGLE_AIRPLANE
 import java.lang.System.currentTimeMillis
 import java.text.DateFormat
 import java.text.DateFormat.SHORT
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit.MINUTES
 
 object SleepNotification {
 
-    private val TIMEOUT_INITIAL_MILLIS = MINUTES.toMillis(30)
+    private val TIMEOUT_INITIAL_MILLIS = MINUTES.toMillis(11)
     private val TIMEOUT_INCREMENT_MILLIS = MINUTES.toMillis(10)
     private val TIMEOUT_DECREMENT_MILLIS = MINUTES.toMillis(10)
 
@@ -37,6 +38,10 @@ object SleepNotification {
         DECREMENT("fr.smarquis.sleeptimer.action.DECREMENT") {
             override fun title(context: Context) = "-" + MILLISECONDS.toMinutes(TIMEOUT_DECREMENT_MILLIS)
         },
+        TOGGLE_AIRPLANE("fr.smarquis.sleeptimer.action.TOGGLE_AIRPLANE") {
+            override fun title(context: Context) =
+                if (context.isAirplaneEnabled()) "Disabling Airplane Mode" else "Not Disabling Airplane Mode"
+        }
         ;
 
         companion object {
@@ -61,6 +66,21 @@ object SleepNotification {
     fun Context.handle(intent: Intent?) = when (Action.parse(intent?.action)) {
         INCREMENT -> update(TIMEOUT_INCREMENT_MILLIS)
         DECREMENT -> update(-TIMEOUT_DECREMENT_MILLIS)
+        TOGGLE_AIRPLANE -> {
+            val newValue = !isAirplaneEnabled()
+            setAirplaneEnabled(newValue)
+
+            // Preserve the current ETA / remaining time instead of resetting it
+            find()?.let { notification ->
+                // Remaining = notification.`when` - currentTimeMillis()
+                val remaining = notification.`when` - currentTimeMillis()
+                if (remaining > 0) {
+                    show(timeout = remaining.coerceAtLeast(1))
+                } else {
+                    show()  // fallback to default if expired
+                }
+            }
+        }
         CANCEL -> cancel()
         null -> Unit
     }
@@ -87,6 +107,7 @@ object SleepNotification {
             .setDeleteIntent(SleepAudioService.pendingIntent(this))
             .addAction(INCREMENT.action(this).build())
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
+            .addAction(TOGGLE_AIRPLANE.action(this).build())
             .addAction(CANCEL.action(this).build())
             .build()
         createNotificationChannel()
@@ -101,6 +122,20 @@ object SleepNotification {
             lockscreenVisibility = VISIBILITY_PUBLIC
         }
         notificationManager()?.createNotificationChannel(channel)
+    }
+
+    private const val PREF_AIRPLANE_ENABLED = "airplane_enabled"
+
+    private fun Context.isAirplaneEnabled(): Boolean {
+        return getSharedPreferences("sleep_timer", Context.MODE_PRIVATE)
+            .getBoolean(PREF_AIRPLANE_ENABLED, true)  // default: YES, enable airplane mode
+    }
+
+    private fun Context.setAirplaneEnabled(enabled: Boolean) {
+        getSharedPreferences("sleep_timer", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(PREF_AIRPLANE_ENABLED, enabled)
+            .apply()
     }
 
 }

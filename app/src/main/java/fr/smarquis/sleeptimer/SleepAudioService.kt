@@ -14,6 +14,13 @@ import android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
 import fr.smarquis.sleeptimer.SleepTileService.Companion.requestTileUpdate
 import java.util.concurrent.TimeUnit.SECONDS
 
+private const val PREF_AIRPLANE_ENABLED = "airplane_enabled"
+
+private fun Context.isAirplaneEnabled(): Boolean {
+    return getSharedPreferences("sleep_timer", Context.MODE_PRIVATE)
+        .getBoolean(PREF_AIRPLANE_ENABLED, true)
+}
+
 @Suppress("DEPRECATION")
 class SleepAudioService : android.app.IntentService("SleepAudioService") {
 
@@ -47,6 +54,23 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         // pause media
         dispatchMediaKeyEvent(KeyEvent(ACTION_DOWN, KEYCODE_MEDIA_PAUSE))
         dispatchMediaKeyEvent(KeyEvent(ACTION_UP, KEYCODE_MEDIA_PAUSE))
+
+        // enable airplane mode only if the user wants it
+        if (this@SleepAudioService.isAirplaneEnabled()) {
+            try {
+                val su = Runtime.getRuntime().exec("su")
+                val os = su.outputStream
+
+                os.write("settings put global airplane_mode_on 1\n".toByteArray())
+                os.write("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true\n".toByteArray())
+
+                os.flush()
+                os.close()
+                su.waitFor()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         // restore volume
         Thread.sleep(RESTORE_VOLUME_MILLIS)
