@@ -65,7 +65,10 @@ object SleepNotification {
         null -> Unit
     }
 
-    fun Context.toggle() = if (find() == null) show() else cancel()
+    /**
+     * @return a [Boolean] hint indicating the expected "visibility" state.
+     */
+    fun Context.toggle(): Boolean = if (find() == null) { show(); true } else { cancel(); false }
 
     private fun Context.cancel() = notificationManager()?.cancel(R.id.notification_id) ?: Unit
 

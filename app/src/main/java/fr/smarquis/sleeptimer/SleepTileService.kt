@@ -29,13 +29,18 @@ class SleepTileService : TileService() {
     override fun onStartListening() = refreshTile()
 
     override fun onClick() = when (notificationManager()?.areNotificationsEnabled()) {
-        true -> toggle().also { refreshTile() }
+        true -> toggle().let(::refreshTile)
         else -> requestNotificationsPermission()
     }
 
-    private fun refreshTile() = qsTile?.run {
-        when (val notification = find()) {
-            null -> {
+    /**
+     * @param hint use `false` to force the [STATE_INACTIVE] update
+     */
+    private fun refreshTile(hint: Boolean? = null) = qsTile?.run {
+        val notification = find()
+        when  {
+            // The canceled notification might still be considered active by NotificationManager... so we use an extra hint
+            notification == null || hint == false -> {
                 state = STATE_INACTIVE
                 if (SDK_INT >= Q) subtitle = resources.getText(R.string.tile_subtitle)
             }
