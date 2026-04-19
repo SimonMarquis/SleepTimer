@@ -8,7 +8,12 @@
 
     <!--region Notification-->
     <item name="notification_id" type="id" />
+    <item name="notification_service_id" type="id" />
     <string name="notification_channel_id">sleep_timer</string>
     <!--endregion-->
 
+    <!--region Toasts-->
+    <string name="toast_notification_permission"><i>Notifications</i> permission is required.</string>
+    <string name="toast_alarm_permission"><i>Alarms &amp; reminders</i> permission is required since <b>Android 17</b>.</string>
+    <!--endregion-->
 </resources>
