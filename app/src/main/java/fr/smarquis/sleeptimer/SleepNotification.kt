@@ -28,6 +28,7 @@ object SleepNotification {
     private val TIMEOUT_INITIAL_MILLIS = MINUTES.toMillis(30)
     private val TIMEOUT_INCREMENT_MILLIS = MINUTES.toMillis(10)
     private val TIMEOUT_DECREMENT_MILLIS = MINUTES.toMillis(10)
+    private const val SLEEP_INTENT_EXTRA_KEY = "extras:SleepPendingIntent"
 
     private enum class Action(private val value: String) {
         CANCEL("fr.smarquis.sleeptimer.action.CANCEL") {
@@ -80,6 +81,12 @@ object SleepNotification {
     private fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS, existing: Notification? = null) {
         require(timeout > 0)
         val eta = currentTimeMillis() + timeout
+        // Keep track of the original PendingIntent inside the notification's extras because
+        // we can't rely on the Notification `deleteIntent` when `REQUIRES_FOREGROUND_SERVICE`
+        val sleepPendingIntent = when {
+            !REQUIRES_FOREGROUND_SERVICE -> existing?.deleteIntent
+            else -> existing?.extras?.getParcelable(SLEEP_INTENT_EXTRA_KEY, PendingIntent::class.java)
+        } ?: SleepAudioService.pendingIntent(this)
         val notification = Notification.Builder(this, getString(R.string.notification_channel_id))
             .setCategory(CATEGORY_EVENT)
             .setVisibility(VISIBILITY_PUBLIC)
@@ -90,7 +97,10 @@ object SleepNotification {
             .setShowWhen(true).setWhen(eta)
             .setUsesChronometer(true).setChronometerCountDown(true)
             .setTimeoutAfter(timeout)
-            .apply { if (!REQUIRES_FOREGROUND_SERVICE) setDeleteIntent(existing?.deleteIntent ?: SleepAudioService.pendingIntent(this@show)) }
+            .apply {
+                if (!REQUIRES_FOREGROUND_SERVICE) setDeleteIntent(sleepPendingIntent)
+                else extras.putParcelable(SLEEP_INTENT_EXTRA_KEY, sleepPendingIntent)
+            }
             .addAction(INCREMENT.action(this).build())
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
             .addAction(CANCEL.action(this).build())
@@ -100,7 +110,7 @@ object SleepNotification {
 
         if (REQUIRES_FOREGROUND_SERVICE) {
             if (alarmManager().canScheduleExactAlarms().not()) Toast.makeText(this, R.string.toast_alarm_permission, Toast.LENGTH_LONG).show()
-            else alarmManager().setExactAndAllowWhileIdle(RTC_WAKEUP, eta, SleepAudioService.pendingIntent(this@show))
+            else alarmManager().setExactAndAllowWhileIdle(RTC_WAKEUP, eta, sleepPendingIntent)
         }
     }
 
