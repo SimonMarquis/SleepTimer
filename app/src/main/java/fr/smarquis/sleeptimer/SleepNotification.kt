@@ -72,9 +72,12 @@ object SleepNotification {
 
     private fun Context.cancel() = notificationManager()?.cancel(R.id.notification_id) ?: Unit
 
-    private fun Context.update(timeout: Long) = find()?.let { it.`when` - currentTimeMillis() }?.let { if (it > -timeout) it + timeout else it }?.let { show(it) }
+    private fun Context.update(delta: Long) = find()?.let { existing ->
+        val remaining = existing.`when` - currentTimeMillis()
+        show(timeout = (remaining + delta).takeIf { it > 0 } ?: remaining, existing)
+    }
 
-    private fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS) {
+    private fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS, existing: Notification? = null) {
         require(timeout > 0)
         val eta = currentTimeMillis() + timeout
         val notification = Notification.Builder(this, getString(R.string.notification_channel_id))
@@ -87,7 +90,7 @@ object SleepNotification {
             .setShowWhen(true).setWhen(eta)
             .setUsesChronometer(true).setChronometerCountDown(true)
             .setTimeoutAfter(timeout)
-            .setDeleteIntent(SleepAudioService.pendingIntent(this))
+            .setDeleteIntent(existing?.deleteIntent ?: SleepAudioService.pendingIntent(this))
             .addAction(INCREMENT.action(this).build())
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
             .addAction(CANCEL.action(this).build())
