@@ -2,6 +2,7 @@ package fr.smarquis.sleeptimer
 
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -27,7 +28,7 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
             .putExtra(VOLUME_EXTRA_KEY, context.audioManager()?.getStreamVolume(STREAM_MUSIC))
 
-        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE)
+        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
     }
 
     @Deprecated("Deprecated in Java")
