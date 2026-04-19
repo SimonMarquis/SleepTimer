@@ -1,11 +1,13 @@
 package fr.smarquis.sleeptimer
 
+import android.app.Notification
+import android.app.Notification.CATEGORY_SERVICE
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
 import android.media.AudioManager.ADJUST_LOWER
 import android.media.AudioManager.STREAM_MUSIC
 import android.view.KeyEvent
@@ -13,7 +15,9 @@ import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.ACTION_UP
 import android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
 import fr.smarquis.sleeptimer.SleepTileService.Companion.requestTileUpdate
+import fr.smarquis.sleeptimer.SleepTimer.REQUIRES_FOREGROUND_SERVICE
 import java.util.concurrent.TimeUnit.SECONDS
+
 
 @Suppress("DEPRECATION")
 class SleepAudioService : android.app.IntentService("SleepAudioService") {
@@ -23,16 +27,22 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
         private val RESTORE_VOLUME_MILLIS = SECONDS.toMillis(2)
         private const val VOLUME_EXTRA_KEY = "extras:volume"
 
-        private fun Context.audioManager() = getSystemService(AudioManager::class.java)
-
         private fun intent(context: Context) = Intent(context, SleepAudioService::class.java)
-            .putExtra(VOLUME_EXTRA_KEY, context.audioManager()?.getStreamVolume(STREAM_MUSIC))
+            .putExtra(VOLUME_EXTRA_KEY, context.audioManager().getStreamVolume(STREAM_MUSIC))
 
-        fun pendingIntent(context: Context): PendingIntent? = PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
+        fun pendingIntent(context: Context): PendingIntent =
+            if (REQUIRES_FOREGROUND_SERVICE) PendingIntent.getForegroundService(context, 0, intent(context), FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
+            else PendingIntent.getService(context, 0, intent(context), FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onHandleIntent(intent: Intent?) = audioManager()?.run {
+    override fun onHandleIntent(intent: Intent?) {
+        if (REQUIRES_FOREGROUND_SERVICE) startForeground(R.id.notification_service_id, notification(), FOREGROUND_SERVICE_TYPE_SHORT_SERVICE)
+        sleep(intent)
+        if (REQUIRES_FOREGROUND_SERVICE) stopForeground(STOP_FOREGROUND_REMOVE)
+    }
+
+    private fun sleep(intent: Intent?) = with(audioManager()) {
         // compute volume to restore
         val currentVolume = getStreamVolume(STREAM_MUSIC)
         val volumeToRestore = intent
@@ -55,6 +65,16 @@ class SleepAudioService : android.app.IntentService("SleepAudioService") {
 
         // update tile
         requestTileUpdate()
-    } ?: Unit
+    }
+
+    /**
+     * Foreground notification to display during [sleep].
+     */
+    private fun notification() = Notification.Builder(this, getString(R.string.notification_channel_id))
+        .setCategory(CATEGORY_SERVICE)
+        .setSmallIcon(R.drawable.ic_tile)
+        .setProgress(100, 50, true)
+        .setOngoing(true)
+        .build()
 
 }
