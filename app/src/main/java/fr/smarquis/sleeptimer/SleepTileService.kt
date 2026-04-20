@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.Q
@@ -59,17 +60,16 @@ class SleepTileService : TileService() {
 
     private fun requestNotificationsPermission() {
         Toast.makeText(this, R.string.toast_notification_permission, Toast.LENGTH_LONG).show()
-        startActivityAndCollapseCompat(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS))
+        startActivityAndCollapseCompat(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
     }
 
     private fun requestScheduleExactAlarmsPermission() {
         Toast.makeText(this, R.string.toast_alarm_permission, Toast.LENGTH_LONG).show()
-        if (SDK_INT >= Build.VERSION_CODES.S) startActivityAndCollapseCompat(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+        if (SDK_INT >= Build.VERSION_CODES.S) startActivityAndCollapseCompat(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:$packageName")))
     }
 
     private fun startActivityAndCollapseCompat(intent: Intent) {
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
         @SuppressLint("StartActivityAndCollapseDeprecated")
         if (SDK_INT <= TIRAMISU) @Suppress("DEPRECATION") startActivityAndCollapse(intent)
         else startActivityAndCollapse(getActivity(this, 0, intent, FLAG_IMMUTABLE))
