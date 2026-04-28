@@ -28,6 +28,12 @@ __Note:__ Don't look for a launcher icon, this app only provides a Quick Setting
 - [AudioManager.setStreamVolume(STREAM_MUSIC, index, flags)](https://developer.android.com/reference/android/media/AudioManager#setStreamVolume(int,%20int,%20int)): restore initial volume.
 - [AudioManager.dispatchMediaKeyEvent(KeyEvent)](https://developer.android.com/reference/android/media/AudioManager#dispatchMediaKeyEvent(android.view.KeyEvent)): sends a simulated key event for a media button.
 
+> [!IMPORTANT]  
+> Android 17 introduced [Background audio hardening](https://developer.android.com/about/versions/17/changes/bg-audio) which prevents calling `AudioManager.adjustStreamVolume(streamType, direction, flags)` from a background thread.  
+> And the system does not allow `PendingIntent` used in `Notification.Builder.setDeleteIntent(intent)` to reference a foreground `Service`.  
+> Therefore, an alarm must be scheduled at a precise time to trigger such foreground `Service` and pause audio playback.
+> - [AlarmManager.setExactAndAllowWhileIdle(type, triggerAtMillis, PendingIntent)](https://developer.android.com/reference/android/app/AlarmManager#setExactAndAllowWhileIdle(int,%20long,%20android.app.PendingIntent)): schedule a system alarm.
+
 # License
 
     Copyright 2020 Simon Marquis
