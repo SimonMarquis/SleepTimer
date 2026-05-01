@@ -37,11 +37,11 @@ object SleepNotification {
 
     fun Context.update(delta: Long) = find()?.let { existing ->
         val remaining = existing.`when` - currentTimeMillis()
-        show(timeout = (remaining + delta).takeIf { it > 0 } ?: remaining, existing)
+        show(timeout = remaining + delta, existing)
     }
 
     fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS, existing: Notification? = null) {
-        require(timeout > 0)
+        if (timeout <= 0) return cancel()
         val eta = currentTimeMillis() + timeout
         // Keep track of the original PendingIntent inside the notification's extras because
         // we can't rely on the Notification `deleteIntent` when `REQUIRES_FOREGROUND_SERVICE`
