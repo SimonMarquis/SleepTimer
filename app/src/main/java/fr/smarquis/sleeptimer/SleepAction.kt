@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 enum class SleepAction(private val value: String) {
     START("fr.smarquis.sleeptimer.action.START"),
+    STOP("fr.smarquis.sleeptimer.action.STOP"),
     CANCEL("fr.smarquis.sleeptimer.action.CANCEL") {
         override fun title(context: Context) = context.getText(android.R.string.cancel)
     },

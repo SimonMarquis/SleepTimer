@@ -7,6 +7,7 @@ import fr.smarquis.sleeptimer.SleepAction.CANCEL
 import fr.smarquis.sleeptimer.SleepAction.DECREMENT
 import fr.smarquis.sleeptimer.SleepAction.INCREMENT
 import fr.smarquis.sleeptimer.SleepAction.START
+import fr.smarquis.sleeptimer.SleepAction.STOP
 import fr.smarquis.sleeptimer.SleepAction.UPDATE
 import fr.smarquis.sleeptimer.SleepNotification.TIMEOUT_DECREMENT_MILLIS
 import fr.smarquis.sleeptimer.SleepNotification.TIMEOUT_INCREMENT_MILLIS
@@ -27,7 +28,7 @@ class SleepActionReceiver : BroadcastReceiver() {
         UPDATE -> update(delta = SleepAction.duration(intent) ?: 0L)
         INCREMENT -> update(TIMEOUT_INCREMENT_MILLIS)
         DECREMENT -> update(-TIMEOUT_DECREMENT_MILLIS)
-        CANCEL -> cancel()
+        STOP, CANCEL -> cancel()
         null -> Unit
     }
 }

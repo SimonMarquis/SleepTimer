@@ -35,9 +35,9 @@ You can trigger the Sleep Timer with tools like [Tasker](https://play.google.com
   ```bash
   adb shell am broadcast -a fr.smarquis.sleeptimer.action.UPDATE -n fr.smarquis.sleeptimer/.SleepActionReceiver --el extras:duration -60
   ```
-- Cancel the timer
+- Stop the timer
   ```bash
-  adb shell am broadcast -a fr.smarquis.sleeptimer.action.CANCEL -n fr.smarquis.sleeptimer/.SleepActionReceiver
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.STOP -n fr.smarquis.sleeptimer/.SleepActionReceiver
   ```
 - Increment (default +10 min)
   ```bash
