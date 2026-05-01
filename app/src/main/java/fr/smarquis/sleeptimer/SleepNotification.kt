@@ -33,7 +33,10 @@ object SleepNotification {
      */
     fun Context.toggle(): Boolean = if (find() == null) { show(); true } else { cancel(); false }
 
-    fun Context.cancel() = notificationManager().cancel(R.id.notification_id)
+    fun Context.cancel() {
+        notificationManager().cancel(R.id.notification_id)
+        if (REQUIRES_FOREGROUND_SERVICE) alarmManager().cancel(SleepAudioService.pendingIntent(this))
+    }
 
     fun Context.update(delta: Long) = find()?.let { existing ->
         val remaining = existing.`when` - currentTimeMillis()
