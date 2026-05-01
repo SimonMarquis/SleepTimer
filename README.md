@@ -19,6 +19,35 @@ When the timer stops, audio playback is gradually lowered then paused.
 
 __Note:__ Don't look for a launcher icon, this app only provides a Quick Settings Tile.
 
+#### Automation
+
+You can trigger the Sleep Timer with tools like [Tasker](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm) or by using `adb` commands:
+
+- Start the timer
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.START -n fr.smarquis.sleeptimer/.SleepActionReceiver
+  ```
+- Start the timer with custom duration (10 min)
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.START -n fr.smarquis.sleeptimer/.SleepActionReceiver --el extras:duration 600
+  ```
+- Update the timer (-1 min)
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.UPDATE -n fr.smarquis.sleeptimer/.SleepActionReceiver --el extras:duration -60
+  ```
+- Cancel the timer
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.CANCEL -n fr.smarquis.sleeptimer/.SleepActionReceiver
+  ```
+- Increment (default +10 min)
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.INCREMENT -n fr.smarquis.sleeptimer/.SleepActionReceiver
+  ```
+- Decrement (default -10 min)
+  ```bash
+  adb shell am broadcast -a fr.smarquis.sleeptimer.action.DECREMENT -n fr.smarquis.sleeptimer/.SleepActionReceiver
+  ```
+
 #### APIs
 
 - [Tile](https://developer.android.com/reference/android/service/quicksettings/Tile.html) and [TileService](https://developer.android.com/reference/android/service/quicksettings/TileService): Quick Settings Tile

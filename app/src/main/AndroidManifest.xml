@@ -31,7 +31,10 @@
                 android:value="true" />
         </service>
         <service android:name=".SleepAudioService" android:foregroundServiceType="shortService" />
-        <receiver android:name=".SleepActionReceiver" android:exported="false" />
+        <receiver
+            android:name=".SleepActionReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver" />
     </application>
 
 </manifest>
