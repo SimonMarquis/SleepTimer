@@ -34,7 +34,12 @@
         <receiver
             android:name=".SleepActionReceiver"
             android:exported="true"
-            tools:ignore="ExportedReceiver" />
+            tools:ignore="ExportedReceiver">
+            <!-- Refresh the tile state after an app update; the system resets active tiles to STATE_UNAVAILABLE. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
