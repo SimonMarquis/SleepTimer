@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:minSdkVersion="37" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" android:minSdkVersion="37" tools:ignore="ForegroundServicesPolicy" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="false"
@@ -32,13 +31,7 @@
         <receiver
             android:name=".SleepActionReceiver"
             android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <!-- Refresh the tile state after an app update; the system resets active tiles to STATE_UNAVAILABLE. -->
-            <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+            tools:ignore="ExportedReceiver" />
     </application>
 
 </manifest>

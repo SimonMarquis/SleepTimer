@@ -32,9 +32,6 @@ class SleepTileService : TileService() {
 
     override fun onStartListening() = refreshTile()
 
-    // Active tiles default to STATE_UNAVAILABLE on add; request a refresh so the tile is clickable.
-    override fun onTileAdded() = requestTileUpdate()
-
     override fun onClick() = when {
         notificationManager().areNotificationsEnabled().not() -> requestNotificationsPermission()
         REQUIRES_FOREGROUND_SERVICE && alarmManager().canScheduleExactAlarms().not() -> requestScheduleExactAlarmsPermission()
