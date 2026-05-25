@@ -8,6 +8,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
 import android.content.Context
+import android.os.Build.VERSION.SDK_INT_FULL
+import android.os.Build.VERSION_CODES_FULL.BAKLAVA_1
 import android.widget.Toast
 import fr.smarquis.sleeptimer.SleepAction.CANCEL
 import fr.smarquis.sleeptimer.SleepAction.DECREMENT
@@ -65,6 +67,12 @@ object SleepNotification {
             .apply {
                 if (!REQUIRES_FOREGROUND_SERVICE) setDeleteIntent(sleepPendingIntent)
                 else extras.putParcelable(SLEEP_INTENT_EXTRA_KEY, sleepPendingIntent)
+            }
+            .apply {
+                if (SDK_INT_FULL < BAKLAVA_1) return@apply
+                setRequestPromotedOngoing(true)
+                // This is a requirement: https://developer.android.com/develop/ui/compose/notifications/live-update
+                setContentTitle(getString(R.string.app_name))
             }
             .addAction(INCREMENT.action(this).build())
             .addAction(DECREMENT.action(this, cancel = timeout <= TIMEOUT_DECREMENT_MILLIS).build())
