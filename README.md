@@ -53,6 +53,7 @@ You can trigger the Sleep Timer with tools like [Tasker](https://play.google.com
 - [Tile](https://developer.android.com/reference/android/service/quicksettings/Tile.html) and [TileService](https://developer.android.com/reference/android/service/quicksettings/TileService): Quick Settings Tile
 - [Notification.Builder.setTimeoutAfter(durationMs)](https://developer.android.com/reference/android/app/Notification.Builder#setTimeoutAfter(long)): set notification timeout.
 - [Notification.Builder.setDeleteIntent(intent)](https://developer.android.com/reference/android/app/Notification.Builder#setDeleteIntent(android.app.PendingIntent)): set deletion action.
+- [NotificationCompat.Builder.setRequestPromotedOngoing(requestPromotedOngoing)](https://developer.android.com/reference/android/app/Notification.Builder#setRequestPromotedOngoing(boolean)): request to be a promoted ongoing notification
 - [AudioManager.adjustStreamVolume(STREAM_MUSIC, ADJUST_LOWER, flags)](https://developer.android.com/reference/android/media/AudioManager#adjustStreamVolume(int,%20int,%20int)): lower media volume.
 - [AudioManager.setStreamVolume(STREAM_MUSIC, index, flags)](https://developer.android.com/reference/android/media/AudioManager#setStreamVolume(int,%20int,%20int)): restore initial volume.
 - [AudioManager.dispatchMediaKeyEvent(KeyEvent)](https://developer.android.com/reference/android/media/AudioManager#dispatchMediaKeyEvent(android.view.KeyEvent)): sends a simulated key event for a media button.
