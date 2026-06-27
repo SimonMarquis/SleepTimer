@@ -4,9 +4,9 @@
 [![Google Play](https://img.shields.io/badge/Google_Play-black?style=flat&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=fr.smarquis.sleeptimer)
 [![F-Droid](https://img.shields.io/badge/F--Droid-black?style=flat&logo=f-droid&logoColor=white)](https://f-droid.org/en/packages/fr.smarquis.sleeptimer/)
 
-| Quick Settings Tile | Notification |
-|---|---|
-| ![Tile](app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_tile.png) | ![Notification](app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_notification.png) |
+| Quick Settings Tile                                                                        | Notification                                                                                               | Live Update                                                                                             |
+|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| ![Tile](app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_tile.png) | ![Notification](app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_notification.png) | ![LiveUpdate](app/src/main/play/listings/en-US/graphics/phone-screenshots/3-screenshot_live_update.png) |
 
 Sleep Timer helps you fall asleep while listening to music or podcasts.  
 When the timer stops, audio playback is gradually lowered then paused.
