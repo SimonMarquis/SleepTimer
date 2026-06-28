@@ -39,6 +39,10 @@ android {
             isDebuggable = true
         }
     }
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
     packaging {
         resources.excludes.add("kotlin-tooling-metadata.json")
         resources.excludes.add("**/*.kotlin_builtins")
