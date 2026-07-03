@@ -1,6 +1,7 @@
 package fr.smarquis.sleeptimer
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.getActivity
 import android.content.ComponentName
@@ -38,14 +39,10 @@ class SleepTileService : TileService() {
         else -> toggle().let(::refreshTile)
     }
 
-    /**
-     * @param hint use `false` to force the [STATE_INACTIVE] update
-     */
-    private fun refreshTile(hint: Boolean? = null) = qsTile?.run {
-        val notification = find()
+    private fun refreshTile(notification: Notification? = find()) = qsTile?.run {
         when {
             // The canceled notification might still be considered active by NotificationManager... so we use an extra hint
-            notification == null || hint == false -> {
+            notification == null -> {
                 state = STATE_INACTIVE
                 if (SDK_INT >= Q) subtitle = resources.getText(R.string.tile_subtitle)
             }

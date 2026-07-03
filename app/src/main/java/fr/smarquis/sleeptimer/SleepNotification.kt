@@ -31,9 +31,9 @@ object SleepNotification {
     fun Context.find() = notificationManager().activeNotifications?.firstOrNull { it.id == R.id.notification_id }?.notification
 
     /**
-     * @return a [Boolean] hint indicating the expected "visibility" state.
+     * @return the newly created [Notification], or `null` when cancelling.
      */
-    fun Context.toggle(): Boolean = if (find() == null) { show(); true } else { cancel(); false }
+    fun Context.toggle(): Notification? = if (find() == null) show() else null.also { cancel() }
 
     fun Context.cancel() {
         notificationManager().cancel(R.id.notification_id)
@@ -45,8 +45,8 @@ object SleepNotification {
         show(timeout = remaining + delta, existing)
     }
 
-    fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS, existing: Notification? = null) {
-        if (timeout <= 0) return cancel()
+    fun Context.show(timeout: Long = TIMEOUT_INITIAL_MILLIS, existing: Notification? = null): Notification? {
+        if (timeout <= 0) return null.also { cancel() }
         val eta = currentTimeMillis() + timeout
         // Keep track of the original PendingIntent inside the notification's extras because
         // we can't rely on the Notification `deleteIntent` when `REQUIRES_FOREGROUND_SERVICE`
@@ -85,6 +85,7 @@ object SleepNotification {
             if (alarmManager().canScheduleExactAlarms().not()) Toast.makeText(this, R.string.toast_alarm_permission, Toast.LENGTH_LONG).show()
             else alarmManager().setExactAndAllowWhileIdle(RTC_WAKEUP, eta, sleepPendingIntent)
         }
+        return notification
     }
 
     private fun Context.createNotificationChannel() {
